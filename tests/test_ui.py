@@ -2,12 +2,13 @@ import tempfile
 import tkinter as tk
 import unittest
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from modem_reset.config import ConfigStore
-from modem_reset.constants import STATUS_GETTING_IP
+from modem_reset.constants import APP_USER_MODEL_ID, STATUS_GETTING_IP
 from modem_reset.models import ResetRequestResult
 from modem_reset.ui.main_window import MainWindow
+from main import configure_windows_app_identity
 
 
 class MainWindowTests(unittest.TestCase):
@@ -33,6 +34,8 @@ class MainWindowTests(unittest.TestCase):
                 self.assertEqual("Reset Modem", app.restart_button.cget("text"))
                 self.assertGreaterEqual(root.winfo_width(), 400)
                 self.assertGreaterEqual(root.winfo_height(), 300)
+                self.assertIsNotNone(app._window_icon)
+                self.assertIn(str(app._window_icon), root.tk.call("image", "names"))
 
                 app.language_var.set("en")
                 app._change_language()
@@ -43,6 +46,15 @@ class MainWindowTests(unittest.TestCase):
             finally:
                 controller.close()
                 root.destroy()
+
+    @patch("main.sys.platform", "win32")
+    @patch("main.ctypes.windll", create=True)
+    def test_windows_app_identity_is_set_before_window_creation(self, windll: Mock) -> None:
+        configure_windows_app_identity()
+
+        windll.shell32.SetCurrentProcessExplicitAppUserModelID.assert_called_once_with(
+            APP_USER_MODEL_ID
+        )
 
 
 if __name__ == "__main__":

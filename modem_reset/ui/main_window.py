@@ -9,6 +9,7 @@ from ..constants import (
     APP_VERSION,
     CONFIG_PATH,
     ICON_PATH,
+    ICON_PNG_PATH,
     POLL_INTERVAL_MS,
 )
 from ..controller import AppController, ControllerEvent
@@ -36,6 +37,7 @@ class MainWindow:
         self._event_timer: str | None = None
         self._auto_export_timer: str | None = None
         self._log_directory_error_shown = False
+        self._window_icon: tk.PhotoImage | None = None
 
         config_error: str | None = None
         try:
@@ -104,10 +106,16 @@ class MainWindow:
 
     def _set_icon(self) -> None:
         try:
-            if ICON_PATH.exists():
-                self.root.iconbitmap(str(ICON_PATH))
+            if ICON_PNG_PATH.exists():
+                self._window_icon = tk.PhotoImage(file=str(ICON_PNG_PATH))
+                self.root.iconphoto(True, self._window_icon)
             else:
-                logging.warning("Icon file not found: %s", ICON_PATH)
+                logging.warning("PNG icon file not found: %s", ICON_PNG_PATH)
+
+            if os.name == "nt" and ICON_PATH.exists():
+                self.root.iconbitmap(str(ICON_PATH))
+            elif os.name == "nt":
+                logging.warning("Windows icon file not found: %s", ICON_PATH)
         except (OSError, tk.TclError) as error:
             logging.warning("Could not set application icon: %s", error)
 
