@@ -39,6 +39,8 @@ MODEM_REBOOT_COMMAND = {'goformId': 'REBOOT_DEVICE'}
 MODEM_LOGIN_COMMAND_ID = 'LOGIN'
 
 # Configuration Sections/Keys
+CONFIG_SECTION_GENERAL = 'GENERAL'
+CONFIG_KEY_LANGUAGE = 'language'
 CONFIG_SECTION_WINDOW = 'WINDOW'
 CONFIG_KEY_POS_X = 'pos_x'
 CONFIG_KEY_POS_Y = 'pos_y'
@@ -52,34 +54,178 @@ CONFIG_KEY_LOG_INTERVAL = 'log_interval'
 CONFIG_SECTION_AUTO_RESET = 'AUTO_RESET'
 CONFIG_KEY_AUTO_RESET_ENABLED = 'enabled'
 CONFIG_KEY_AUTO_RESET_INTERVAL = 'interval_seconds'
+DEFAULT_LANGUAGE = 'vi'
+SUPPORTED_LANGUAGES = ('vi', 'en')
 
-# Status Messages
-STATUS_NORMAL = "Hoạt động bình thường"
-STATUS_CHECKING = "Đang kiểm tra kết nối..."
-STATUS_DISCONNECTED = "Mất kết nối Internet"
-STATUS_GETTING_IP = "Đang lấy IP..."
-STATUS_IP_TIMEOUT = "Lỗi Timeout (IP)"
-STATUS_IP_UNKNOWN = "Không xác định (IP)"
-STATUS_IP_PARSE_ERROR = "Lỗi phân tích IP" # New status for JSON parse error
-STATUS_RESET_MANUAL_START = "Reset Thủ công Bắt đầu"
-STATUS_RESET_AUTO_START = "Reset Tự động Bắt đầu (chu kỳ {}s)"
-STATUS_RESET_END_UNKNOWN = "Reset Kết thúc (Không rõ KQ)"
-STATUS_LOGIN_ATTEMPT = "Đang đăng nhập modem..."
-STATUS_LOGIN_FAILED = "Sai mật khẩu modem"
-STATUS_LOGIN_UNKNOWN_ERROR = "Lỗi đăng nhập không xác định"
-STATUS_REBOOT_COMMAND_SENT = "Đang gửi lệnh reset..."
-STATUS_REBOOTING = "Reset modem (đang khởi động lại)"
-STATUS_REBOOT_CMD_ERROR = "Lỗi gửi lệnh reset: {}"
-STATUS_MODEM_TIMEOUT = "Lỗi: Modem không phản hồi (timeout)"
-STATUS_MODEM_CONNECTION_ERROR = "Lỗi: Không kết nối được tới modem"
-STATUS_REQUEST_ERROR = "Lỗi kết nối mạng: {}"
-STATUS_UNKNOWN_ERROR = "Lỗi không xác định: {}"
+# Internal status identifiers. Translate only when displaying them.
+STATUS_NORMAL = "status_normal"
+STATUS_CHECKING = "status_checking"
+STATUS_DISCONNECTED = "status_disconnected"
+STATUS_GETTING_IP = "status_getting_ip"
+STATUS_IP_TIMEOUT = "status_ip_timeout"
+STATUS_IP_UNKNOWN = "status_ip_unknown"
+STATUS_IP_PARSE_ERROR = "status_ip_parse_error"
+STATUS_RESET_MANUAL_START = "status_reset_manual_start"
+STATUS_RESET_AUTO_START = "status_reset_auto_start:{}"
+STATUS_RESET_END_UNKNOWN = "status_reset_end_unknown"
+STATUS_LOGIN_ATTEMPT = "status_login_attempt"
+STATUS_LOGIN_FAILED = "status_login_failed"
+STATUS_LOGIN_UNKNOWN_ERROR = "status_login_unknown_error"
+STATUS_REBOOT_COMMAND_SENT = "status_reboot_command_sent"
+STATUS_REBOOTING = "status_rebooting"
+STATUS_REBOOT_CMD_ERROR = "status_reboot_cmd_error:{}"
+STATUS_MODEM_TIMEOUT = "status_modem_timeout"
+STATUS_MODEM_CONNECTION_ERROR = "status_modem_connection_error"
+STATUS_REQUEST_ERROR = "status_request_error:{}"
+STATUS_UNKNOWN_ERROR = "status_unknown_error:{}"
 
-# GUI Log Messages
-LOG_ERR_CONN_ABORTED = "Connection aborted by remote host"
-LOG_ERR_CONN_REFUSED = "Connection refused by modem"
-LOG_ERR_CONN_TIMEOUT = "Connection timed out"
-LOG_ERR_GENERIC_NETWORK = "Lỗi mạng chung"
+LOG_ERR_CONN_ABORTED = "log_err_conn_aborted"
+LOG_ERR_CONN_REFUSED = "log_err_conn_refused"
+LOG_ERR_CONN_TIMEOUT = "log_err_conn_timeout"
+LOG_ERR_GENERIC_NETWORK = "log_err_generic_network"
+
+TRANSLATIONS = {
+    'vi': {
+        'menu_options': 'Tùy chọn',
+        'menu_log_settings': 'Cài đặt Log...',
+        'menu_about': 'Thông tin...',
+        'menu_exit': 'Thoát',
+        'menu_language': 'Ngôn ngữ',
+        'language_vi': 'Tiếng Việt',
+        'language_en': 'English',
+        'password_label': 'Mật khẩu modem:',
+        'save': 'Lưu',
+        'auto_reset_label': 'Tự động reset (giây):',
+        'enable': 'Bật',
+        'reset_modem': 'Reset Modem',
+        'public_ip': 'IP Public: {value}',
+        'activity_history': 'Lịch sử hoạt động',
+        'time': 'Thời gian',
+        'ip': 'IP',
+        'status': 'Trạng thái',
+        'settings_title': 'Cài đặt Lưu Log',
+        'log_directory': 'Thư mục lưu log:',
+        'choose': 'Chọn...',
+        'auto_save_interval': 'Tự động lưu file mỗi (giây, 0 = tắt):',
+        'cancel': 'Hủy',
+        'directory_not_selected': 'Chưa chọn thư mục',
+        'choose_log_directory': 'Chọn thư mục để lưu file log',
+        'input_error_title': 'Lỗi Đầu vào',
+        'invalid_log_interval': 'Thời gian tự động lưu phải là số nguyên không âm.',
+        'missing_info_title': 'Thiếu Thông tin',
+        'missing_log_directory': 'Vui lòng chọn thư mục nếu bật tự động lưu.',
+        'config_error_title': 'Lỗi Config',
+        'config_error': "Lỗi đọc file cấu hình '{filename}'.\nSử dụng cài đặt mặc định.",
+        'confirm_exit_title': 'Xác nhận thoát',
+        'confirm_exit': 'Bạn có chắc muốn thoát {app_name}?',
+        'about_title': 'Thông tin',
+        'about_body': '{app_name}\nPhiên bản: {version}\n\nChức năng:\n- Theo dõi IP Public.\n- Reset modem Viettel (HG8045A5, F670Y, v.v.).\n- Lưu log hoạt động ra file.\n- Tự động reset khi mất kết nối (tùy chọn).\n- Lưu cài đặt, ngôn ngữ, vị trí và kích thước cửa sổ.',
+        'export_error_title': 'Lỗi Xuất Log',
+        'invalid_export_directory': "Thư mục lưu log tự động '{directory}' không hợp lệ hoặc không thể truy cập.\nVui lòng kiểm tra lại trong Cài đặt Log.",
+        'write_log_error': 'Không thể ghi file log:\n{path}\n\nLỗi: {error}',
+        'unknown_export_error': 'Lỗi không xác định khi xuất log:\n{error}',
+        'missing_password_title': 'Thiếu Mật khẩu',
+        'missing_password': 'Vui lòng nhập mật khẩu modem.',
+        'reset_in_progress_title': 'Đang thực hiện',
+        'reset_in_progress': 'Modem đang trong quá trình reset.\nVui lòng đợi.',
+        'fatal_error_title': 'Lỗi Nghiêm Trọng',
+        'fatal_error': "Ứng dụng gặp lỗi nghiêm trọng và phải đóng:\n\n{error_type}: {error}\n\nVui lòng kiểm tra file log '{log_filename}' để biết chi tiết.",
+        'status_normal': 'Hoạt động bình thường',
+        'status_checking': 'Đang kiểm tra kết nối...',
+        'status_disconnected': 'Mất kết nối Internet',
+        'status_getting_ip': 'Đang lấy IP...',
+        'status_ip_timeout': 'Lỗi Timeout (IP)',
+        'status_ip_unknown': 'Không xác định (IP)',
+        'status_ip_parse_error': 'Lỗi phân tích IP',
+        'status_reset_manual_start': 'Reset Thủ công Bắt đầu',
+        'status_reset_auto_start': 'Reset Tự động Bắt đầu (chu kỳ {seconds}s)',
+        'status_reset_end_unknown': 'Reset Kết thúc (Không rõ KQ)',
+        'status_login_attempt': 'Đang đăng nhập modem...',
+        'status_login_failed': 'Sai mật khẩu modem',
+        'status_login_unknown_error': 'Lỗi đăng nhập không xác định',
+        'status_reboot_command_sent': 'Đang gửi lệnh reset...',
+        'status_rebooting': 'Reset modem (đang khởi động lại)',
+        'status_reboot_cmd_error': 'Lỗi gửi lệnh reset: {detail}',
+        'status_modem_timeout': 'Lỗi: Modem không phản hồi (timeout)',
+        'status_modem_connection_error': 'Lỗi: Không kết nối được tới modem',
+        'status_request_error': 'Lỗi kết nối mạng: {detail}',
+        'status_unknown_error': 'Lỗi không xác định: {detail}',
+        'log_err_conn_aborted': 'Kết nối bị máy chủ từ xa ngắt',
+        'log_err_conn_refused': 'Modem từ chối kết nối',
+        'log_err_conn_timeout': 'Kết nối quá thời gian',
+        'log_err_generic_network': 'Lỗi mạng chung',
+    },
+    'en': {
+        'menu_options': 'Options',
+        'menu_log_settings': 'Log Settings...',
+        'menu_about': 'About...',
+        'menu_exit': 'Exit',
+        'menu_language': 'Language',
+        'language_vi': 'Tiếng Việt',
+        'language_en': 'English',
+        'password_label': 'Modem password:',
+        'save': 'Save',
+        'auto_reset_label': 'Auto reset (seconds):',
+        'enable': 'Enable',
+        'reset_modem': 'Reset Modem',
+        'public_ip': 'Public IP: {value}',
+        'activity_history': 'Activity history',
+        'time': 'Time',
+        'ip': 'IP',
+        'status': 'Status',
+        'settings_title': 'Log Export Settings',
+        'log_directory': 'Log directory:',
+        'choose': 'Choose...',
+        'auto_save_interval': 'Automatically save every (seconds, 0 = off):',
+        'cancel': 'Cancel',
+        'directory_not_selected': 'No directory selected',
+        'choose_log_directory': 'Choose a directory for log files',
+        'input_error_title': 'Input Error',
+        'invalid_log_interval': 'The auto-save interval must be a non-negative integer.',
+        'missing_info_title': 'Missing Information',
+        'missing_log_directory': 'Choose a directory when automatic saving is enabled.',
+        'config_error_title': 'Configuration Error',
+        'config_error': "Could not read configuration file '{filename}'.\nDefault settings will be used.",
+        'confirm_exit_title': 'Confirm Exit',
+        'confirm_exit': 'Are you sure you want to exit {app_name}?',
+        'about_title': 'About',
+        'about_body': '{app_name}\nVersion: {version}\n\nFeatures:\n- Monitor the public IP address.\n- Reset Viettel modems (HG8045A5, F670Y, etc.).\n- Export activity logs to files.\n- Automatically reset when the connection is lost (optional).\n- Save settings, language, window position, and window size.',
+        'export_error_title': 'Log Export Error',
+        'invalid_export_directory': "The automatic log directory '{directory}' is invalid or inaccessible.\nCheck it in Log Settings.",
+        'write_log_error': 'Could not write the log file:\n{path}\n\nError: {error}',
+        'unknown_export_error': 'Unknown error while exporting the log:\n{error}',
+        'missing_password_title': 'Missing Password',
+        'missing_password': 'Enter the modem password.',
+        'reset_in_progress_title': 'Reset in Progress',
+        'reset_in_progress': 'The modem is being reset.\nPlease wait.',
+        'fatal_error_title': 'Fatal Error',
+        'fatal_error': "The application encountered a fatal error and must close:\n\n{error_type}: {error}\n\nCheck the log file '{log_filename}' for details.",
+        'status_normal': 'Operating normally',
+        'status_checking': 'Checking connection...',
+        'status_disconnected': 'Internet connection lost',
+        'status_getting_ip': 'Getting IP...',
+        'status_ip_timeout': 'IP request timed out',
+        'status_ip_unknown': 'Unknown IP',
+        'status_ip_parse_error': 'IP response parsing error',
+        'status_reset_manual_start': 'Manual reset started',
+        'status_reset_auto_start': 'Automatic reset started ({seconds}s cycle)',
+        'status_reset_end_unknown': 'Reset finished (unknown result)',
+        'status_login_attempt': 'Logging in to modem...',
+        'status_login_failed': 'Incorrect modem password',
+        'status_login_unknown_error': 'Unknown modem login error',
+        'status_reboot_command_sent': 'Sending reset command...',
+        'status_rebooting': 'Resetting modem (restarting)',
+        'status_reboot_cmd_error': 'Reset command error: {detail}',
+        'status_modem_timeout': 'Error: modem did not respond (timeout)',
+        'status_modem_connection_error': 'Error: could not connect to modem',
+        'status_request_error': 'Network request error: {detail}',
+        'status_unknown_error': 'Unknown error: {detail}',
+        'log_err_conn_aborted': 'Connection aborted by remote host',
+        'log_err_conn_refused': 'Connection refused by modem',
+        'log_err_conn_timeout': 'Connection timed out',
+        'log_err_generic_network': 'General network error',
+    },
+}
 
 # --- Helper Function for Centering Windows ---
 def center_window(window: tk.Misc, width: int, height: int, parent: tk.Misc = None):
@@ -120,85 +266,92 @@ def center_window(window: tk.Misc, width: int, height: int, parent: tk.Misc = No
 
 # --- Settings Window ---
 class SettingsWindow(tk.Toplevel):
-    """A Toplevel window for configuring log file export settings."""
+    """A modal window for configuring log file export settings."""
+
     def __init__(self, parent_app: 'ModemResetApp'):
         super().__init__(parent_app.root)
         self.parent_app = parent_app
-        self.transient(parent_app.root) # Keep on top of parent
-        self.title("Cài đặt Lưu Log")
+        self.transient(parent_app.root)
+        self.title(parent_app._t('settings_title'))
         self.resizable(False, False)
-        self.grab_set() # Modal behavior
+        self.grab_set()
         settings_width = 450
         settings_height = 200
 
-        # Initialize variables with current app settings
-        initial_dir = parent_app.log_directory or "Chưa chọn thư mục"
-        initial_interval = str(parent_app.log_interval)
+        initial_dir = parent_app.log_directory or parent_app._t('directory_not_selected')
         self.log_dir_var = tk.StringVar(value=initial_dir)
-        self.log_interval_var = tk.StringVar(value=initial_interval)
+        self.log_interval_var = tk.StringVar(value=str(parent_app.log_interval))
 
-        # --- Widgets ---
         main_frame = ttk.Frame(self, padding="10")
         main_frame.pack(expand=True, fill="both")
 
-        ttk.Label(main_frame, text="Thư mục lưu log:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        ttk.Label(main_frame, text=parent_app._t('log_directory')).grid(
+            row=0, column=0, padx=5, pady=5, sticky="w"
+        )
         dir_entry = ttk.Entry(main_frame, textvariable=self.log_dir_var, state="readonly", width=40)
         dir_entry.grid(row=1, column=0, padx=5, pady=2, sticky="ew")
-        dir_button = ttk.Button(main_frame, text="Chọn...", command=self._select_directory)
-        dir_button.grid(row=1, column=1, padx=5, pady=2)
+        ttk.Button(main_frame, text=parent_app._t('choose'), command=self._select_directory).grid(
+            row=1, column=1, padx=5, pady=2
+        )
 
-        ttk.Label(main_frame, text="Tự động lưu file mỗi (giây, 0 = tắt):").grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        ttk.Label(main_frame, text=parent_app._t('auto_save_interval')).grid(
+            row=2, column=0, padx=5, pady=5, sticky="w"
+        )
         interval_entry = ttk.Entry(main_frame, textvariable=self.log_interval_var, width=10)
         interval_entry.grid(row=3, column=0, padx=5, pady=2, sticky="w")
-        # Allow saving by pressing Enter in the interval entry
         interval_entry.bind("<Return>", lambda event: self._save_settings())
 
-        # Frame for buttons at the bottom right
         button_frame = ttk.Frame(main_frame)
         button_frame.grid(row=4, column=0, columnspan=2, pady=15, sticky="e")
-        save_button = ttk.Button(button_frame, text="Lưu", command=self._save_settings)
-        save_button.pack(side="left", padx=5)
-        cancel_button = ttk.Button(button_frame, text="Hủy", command=self.destroy)
-        cancel_button.pack(side="left", padx=5)
+        ttk.Button(button_frame, text=parent_app._t('save'), command=self._save_settings).pack(
+            side="left", padx=5
+        )
+        ttk.Button(button_frame, text=parent_app._t('cancel'), command=self.destroy).pack(
+            side="left", padx=5
+        )
 
-        # Configure column weights for resizing (though window is fixed size)
         main_frame.columnconfigure(0, weight=1)
-
-        interval_entry.focus() # Set focus to interval entry
+        interval_entry.focus()
         center_window(self, settings_width, settings_height, parent=parent_app.root)
-        self.wait_window() # Make it modal - wait until destroyed
+        self.wait_window()
 
     def _select_directory(self):
-        """Opens a dialog to choose a log directory."""
-        # Use the current setting or the script's directory as starting point
         initial_dir = self.parent_app.log_directory or os.getcwd()
-        directory = filedialog.askdirectory(parent=self, title="Chọn thư mục để lưu file log", initialdir=initial_dir)
-        if directory: # Only update if a directory was selected
+        directory = filedialog.askdirectory(
+            parent=self,
+            title=self.parent_app._t('choose_log_directory'),
+            initialdir=initial_dir,
+        )
+        if directory:
             self.log_dir_var.set(directory)
 
     def _save_settings(self):
-        """Validates and saves the log settings to the main app."""
         try:
             interval = int(self.log_interval_var.get())
             if interval < 0:
                 raise ValueError("Interval cannot be negative")
         except ValueError:
-            messagebox.showerror("Lỗi Đầu vào", "Thời gian tự động lưu phải là số nguyên không âm.", parent=self)
-            return # Keep settings window open
+            messagebox.showerror(
+                self.parent_app._t('input_error_title'),
+                self.parent_app._t('invalid_log_interval'),
+                parent=self,
+            )
+            return
 
         directory = self.log_dir_var.get()
-        # Treat the placeholder text as None
-        if directory == "Chưa chọn thư mục":
+        if directory == self.parent_app._t('directory_not_selected'):
             directory = None
 
-        # Require directory if auto-save interval is positive
         if directory is None and interval > 0:
-            messagebox.showerror("Thiếu Thông tin", "Vui lòng chọn thư mục nếu bật tự động lưu.", parent=self)
-            return # Keep settings window open
+            messagebox.showerror(
+                self.parent_app._t('missing_info_title'),
+                self.parent_app._t('missing_log_directory'),
+                parent=self,
+            )
+            return
 
-        # Pass validated settings back to the main application
         self.parent_app.update_log_settings(directory, interval)
-        self.destroy() # Close the settings window
+        self.destroy()
 
 
 # --- Main Application ---
@@ -216,6 +369,7 @@ class ModemResetApp:
         self.last_pos_x = self.last_pos_y = None
         self.last_window_width = self.last_window_height = None
         # Tkinter variables
+        self.language_var = tk.StringVar(value=DEFAULT_LANGUAGE)
         self.password_var = tk.StringVar()
         self.save_password_var = tk.BooleanVar()
         self.auto_reset_interval_var = tk.StringVar(value=str(DEFAULT_AUTO_RESET_INTERVAL))
@@ -241,18 +395,84 @@ class ModemResetApp:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36'
         })
         # GUI widget refs
-        self.tree = self.ip_label = self.restart_btn = None
+        self.tree = self.ip_label = self.restart_btn = self.log_frame = None
+        self.password_label = self.auto_reset_label = None
         self.auto_reset_interval_entry = self.auto_reset_enabled_chk = None
         self.password_entry = self.save_password_chk = None
-        # Init
+        self.tree_statuses = {}
+        self.tree_ips = {}
+        # Load settings before constructing translated controls.
+        self._load_config()
         self._set_icon()
         self._create_menu()
         self._create_widgets()
-        self._load_config()
         self._position_window()
-        self._is_running = True  # Thread control flag
+        self._is_running = True
         self._start_background_tasks()
         self.root.protocol("WM_DELETE_WINDOW", self._on_closing)
+    def _t(self, key: str, **kwargs) -> str:
+        """Returns a translated UI string for the active language."""
+        language = self.language_var.get()
+        if language not in SUPPORTED_LANGUAGES:
+            language = DEFAULT_LANGUAGE
+        template = TRANSLATIONS[language].get(key, TRANSLATIONS[DEFAULT_LANGUAGE].get(key, key))
+        return template.format(**kwargs) if kwargs else template
+
+    def _status_text(self, status: str) -> str:
+        """Translates an internal status identifier while preserving normal IP addresses."""
+        if not isinstance(status, str):
+            return str(status)
+        key, separator, detail = status.partition(':')
+        if key not in TRANSLATIONS[DEFAULT_LANGUAGE]:
+            return status
+        if not separator:
+            return self._t(key)
+        if key == 'status_reset_auto_start':
+            return self._t(key, seconds=detail)
+        translated_detail = self._status_text(detail)
+        return self._t(key, detail=translated_detail)
+
+    def _change_language(self):
+        """Applies and persists a language selected from the menu."""
+        language = self.language_var.get()
+        if language not in SUPPORTED_LANGUAGES:
+            self.language_var.set(DEFAULT_LANGUAGE)
+        self._refresh_language()
+        self._save_config()
+
+    def _refresh_language(self):
+        """Updates every visible main-window string without restarting the application."""
+        self.root.update_idletasks()
+        current_geometry = self.root.winfo_geometry()
+        self._create_menu()
+        self.root.geometry(current_geometry)
+        self.password_label.config(text=self._t('password_label'))
+        self.save_password_chk.config(text=self._t('save'))
+        self.auto_reset_label.config(text=self._t('auto_reset_label'))
+        self.auto_reset_enabled_chk.config(text=self._t('enable'))
+        self.restart_btn.config(text=self._t('reset_modem'))
+        self.log_frame.config(text=self._t('activity_history'))
+        self.tree.heading('time', text=self._t('time'), anchor='w')
+        self.tree.heading('ip', text=self._t('ip'), anchor='w')
+        self.tree.heading('status', text=self._t('status'), anchor='w')
+        self._update_ip_label()
+        self._refresh_log_statuses()
+        self.root.update_idletasks()
+        self.root.geometry(current_geometry)
+
+    def _refresh_log_statuses(self):
+        """Re-translates existing log rows after a live language change."""
+        tracked_items = set(self.tree_statuses) | set(self.tree_ips)
+        for item in tracked_items:
+            if not self.tree.exists(item):
+                self.tree_statuses.pop(item, None)
+                self.tree_ips.pop(item, None)
+                continue
+            values = list(self.tree.item(item, 'values'))
+            if len(values) == 3:
+                values[1] = self._status_text(self.tree_ips.get(item, values[1]))
+                values[2] = self._status_text(self.tree_statuses.get(item, values[2]))
+                self.tree.item(item, values=values)
 
     def _set_icon(self):
         """Set window icon if file exists."""
@@ -265,63 +485,89 @@ class ModemResetApp:
             logging.warning(f"Could not set icon: {e}")
 
     def _create_menu(self):
-        """Create main menu bar."""
+        """Creates the menu bar in the active language."""
         menubar = tk.Menu(self.root)
         options_menu = tk.Menu(menubar, tearoff=0)
-        options_menu.add_command(label="Cài đặt Log...", command=self._open_settings_window)
-        options_menu.add_command(label="Thông tin...", command=self._show_about_info)
+        options_menu.add_command(label=self._t('menu_log_settings'), command=self._open_settings_window)
+        options_menu.add_command(label=self._t('menu_about'), command=self._show_about_info)
+
+        language_menu = tk.Menu(options_menu, tearoff=0)
+        language_menu.add_radiobutton(
+            label=self._t('language_vi'), variable=self.language_var, value='vi', command=self._change_language
+        )
+        language_menu.add_radiobutton(
+            label=self._t('language_en'), variable=self.language_var, value='en', command=self._change_language
+        )
+        options_menu.add_cascade(label=self._t('menu_language'), menu=language_menu)
         options_menu.add_separator()
-        options_menu.add_command(label="Thoát", command=self._on_closing)
-        menubar.add_cascade(label="Tùy chọn", menu=options_menu)
+        options_menu.add_command(label=self._t('menu_exit'), command=self._on_closing)
+        menubar.add_cascade(label=self._t('menu_options'), menu=options_menu)
         self.root.config(menu=menubar)
 
     def _create_widgets(self):
-        """Create main window widgets."""
+        """Creates the main window controls."""
         top_frame = ttk.Frame(self.root, padding=(10, 10, 10, 5))
         top_frame.pack(fill='x', side='top')
-        top_frame.columnconfigure(1, weight=1)
-        # Password
-        ttk.Label(top_frame, text="Mật khẩu modem:").grid(row=0, column=0, sticky='w', padx=(0, 5), pady=3)
+        top_frame.columnconfigure(3, weight=1)
+
+        # Manual Reset Button: right of the fields, left-aligned in its area,
+        # and vertically centered across both rows.
+        self.restart_btn = ttk.Button(
+            top_frame, text=self._t('reset_modem'), command=self._manual_reset_request, width=15
+        )
+        self.restart_btn.grid(
+            row=0, column=2, rowspan=2, padx=(10, 0), pady=3, sticky='w', ipady=3
+        )
+
+        self.password_label = ttk.Label(top_frame, text=self._t('password_label'))
+        self.password_label.grid(row=0, column=0, sticky='w', padx=(0, 5), pady=3)
         pw_frame = ttk.Frame(top_frame)
         pw_frame.grid(row=0, column=1, sticky='w')
         self.password_entry = ttk.Entry(pw_frame, textvariable=self.password_var, show="*", width=15)
         self.password_entry.pack(side='left', padx=(0, 5))
-        self.save_password_chk = ttk.Checkbutton(pw_frame, text="Lưu", variable=self.save_password_var)
+        self.save_password_chk = ttk.Checkbutton(
+            pw_frame, text=self._t('save'), variable=self.save_password_var
+        )
         self.save_password_chk.pack(side='left')
-        # Auto Reset
-        ttk.Label(top_frame, text="Tự động reset (giây):").grid(row=1, column=0, sticky='w', padx=(0, 5), pady=3)
+
+        self.auto_reset_label = ttk.Label(top_frame, text=self._t('auto_reset_label'))
+        self.auto_reset_label.grid(row=1, column=0, sticky='w', padx=(0, 5), pady=3)
         reset_frame = ttk.Frame(top_frame)
         reset_frame.grid(row=1, column=1, sticky='w')
-        self.auto_reset_interval_entry = ttk.Entry(reset_frame, textvariable=self.auto_reset_interval_var, width=15)
+        self.auto_reset_interval_entry = ttk.Entry(
+            reset_frame, textvariable=self.auto_reset_interval_var, width=15
+        )
         self.auto_reset_interval_entry.pack(side='left', padx=(0, 5))
-        self.auto_reset_enabled_chk = ttk.Checkbutton(reset_frame, text="Bật", variable=self.auto_reset_enabled_var, command=self._schedule_auto_reset)
+        self.auto_reset_enabled_chk = ttk.Checkbutton(
+            reset_frame,
+            text=self._t('enable'),
+            variable=self.auto_reset_enabled_var,
+            command=self._schedule_auto_reset,
+        )
         self.auto_reset_enabled_chk.pack(side='left')
         self.auto_reset_interval_entry.bind("<Return>", lambda e: self._schedule_auto_reset())
         self.auto_reset_interval_entry.bind("<FocusOut>", lambda e: self._schedule_auto_reset())
-        # Manual Reset Button
-        manual_reset_frame = ttk.Frame(top_frame)
-        manual_reset_frame.grid(row=0, column=2, rowspan=2, padx=(10, 0), pady=3, sticky='ns')
-        self.restart_btn = ttk.Button(manual_reset_frame, text="Reset Modem", command=self._manual_reset_request, width=15)
-        self.restart_btn.pack(expand=True, ipady=3)
-        # IP Label
-        self.ip_label = ttk.Label(top_frame, text=f"IP Public: {self.public_ip}", width=40, anchor='w')
-        self.ip_label.grid(row=2, column=0, columnspan=3, pady=5, sticky='w')
+
+        self.ip_label = ttk.Label(
+            top_frame, text=self._t('public_ip', value=self._status_text(self.public_ip)), width=40, anchor='w'
+        )
+        self.ip_label.grid(row=2, column=0, columnspan=4, pady=5, sticky='w')
         ttk.Separator(self.root).pack(fill='x', pady=5, padx=10)
-        # Log Frame
-        log_frame = ttk.LabelFrame(self.root, text="Lịch sử hoạt động", padding=5)
-        log_frame.pack(fill='both', expand=True, padx=10, pady=(0, 10), side='bottom')
+
+        self.log_frame = ttk.LabelFrame(self.root, text=self._t('activity_history'), padding=5)
+        self.log_frame.pack(fill='both', expand=True, padx=10, pady=(0, 10), side='bottom')
         columns = ("time", "ip", "status")
-        self.tree = ttk.Treeview(log_frame, columns=columns, show='headings', height=10)
-        self.tree.heading("time", text="Thời gian", anchor='w')
+        self.tree = ttk.Treeview(self.log_frame, columns=columns, show='headings', height=10)
+        self.tree.heading("time", text=self._t('time'), anchor='w')
         self.tree.column("time", width=140, anchor='w', stretch=tk.NO)
-        self.tree.heading("ip", text="IP", anchor='w')
+        self.tree.heading("ip", text=self._t('ip'), anchor='w')
         self.tree.column("ip", width=120, anchor='w', stretch=tk.NO)
-        self.tree.heading("status", text="Trạng thái", anchor='w')
+        self.tree.heading("status", text=self._t('status'), anchor='w')
         self.tree.column("status", width=250, anchor='w')
-        scrollbar = ttk.Scrollbar(log_frame, orient="vertical", command=self.tree.yview)
+        scrollbar = ttk.Scrollbar(self.log_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
-        log_frame.rowconfigure(0, weight=1)
-        log_frame.columnconfigure(0, weight=1)
+        self.log_frame.rowconfigure(0, weight=1)
+        self.log_frame.columnconfigure(0, weight=1)
         self.tree.grid(row=0, column=0, sticky='nsew')
         scrollbar.grid(row=0, column=1, sticky='ns')
 
@@ -370,6 +616,12 @@ class ModemResetApp:
 
         try:
             self.config.read(CONFIG_FILE, encoding='utf-8') # Specify encoding
+            language = self.config.get(
+                CONFIG_SECTION_GENERAL,
+                CONFIG_KEY_LANGUAGE,
+                fallback=DEFAULT_LANGUAGE,
+            )
+            self.language_var.set(language if language in SUPPORTED_LANGUAGES else DEFAULT_LANGUAGE)
 
             # Load Credentials
             if self.config.has_section(CONFIG_SECTION_CREDS):
@@ -404,7 +656,11 @@ class ModemResetApp:
 
         except (configparser.Error, ValueError, TypeError) as e:
             logging.error(f"Error reading config file '{CONFIG_FILE}': {e}")
-            messagebox.showwarning("Lỗi Config", f"Lỗi đọc file cấu hình '{CONFIG_FILE}'.\nSử dụng cài đặt mặc định.", parent=self.root)
+            messagebox.showwarning(
+                self._t('config_error_title'),
+                self._t('config_error', filename=CONFIG_FILE),
+                parent=self.root,
+            )
             self._reset_to_default_config_values() # Reset state if config is corrupt
 
     def _reset_to_default_config_values(self):
@@ -416,6 +672,7 @@ class ModemResetApp:
         self.log_interval = DEFAULT_LOG_INTERVAL
         self.auto_reset_enabled_var.set(False)
         self.auto_reset_interval_var.set(str(DEFAULT_AUTO_RESET_INTERVAL))
+        self.language_var.set(DEFAULT_LANGUAGE)
         self.last_pos_x = None
         self.last_pos_y = None
         self.last_window_width = None
@@ -428,9 +685,10 @@ class ModemResetApp:
         logging.info("Saving configuration...")
         try:
             # Ensure sections exist
-            for section in [CONFIG_SECTION_CREDS, CONFIG_SECTION_LOGGING, CONFIG_SECTION_WINDOW, CONFIG_SECTION_AUTO_RESET]:
+            for section in [CONFIG_SECTION_GENERAL, CONFIG_SECTION_CREDS, CONFIG_SECTION_LOGGING, CONFIG_SECTION_WINDOW, CONFIG_SECTION_AUTO_RESET]:
                 if not self.config.has_section(section):
                     self.config.add_section(section)
+            self.config.set(CONFIG_SECTION_GENERAL, CONFIG_KEY_LANGUAGE, self.language_var.get())
 
             # Save Credentials
             if self.save_password_var.get():
@@ -512,7 +770,11 @@ class ModemResetApp:
     def _on_closing(self):
         """Handles the window close event (clicking the X button)."""
         # Ask for confirmation before closing
-        if messagebox.askyesno("Xác nhận thoát", f"Bạn có chắc muốn thoát {APP_NAME}?", parent=self.root):
+        if messagebox.askyesno(
+            self._t('confirm_exit_title'),
+            self._t('confirm_exit', app_name=APP_NAME),
+            parent=self.root,
+        ):
             logging.info("Close requested by user. Shutting down...")
             self._cancel_all_timers() # Stop any pending actions
             self._save_config() # Save settings before exiting
@@ -526,9 +788,9 @@ class ModemResetApp:
             logging.info("User cancelled close request.")
 
     def _show_about_info(self):
-        """Displays the About information dialog."""
-        info = f"{APP_NAME}\nPhiên bản: {APP_VERSION}\n\nChức năng:\n- Theo dõi IP Public.\n- Reset modem Viettel (HG8045A5, F670Y, etc.).\n- Lưu log hoạt động ra file.\n- Tự động reset khi mất kết nối (tùy chọn).\n- Lưu cài đặt và vị trí cửa sổ."
-        messagebox.showinfo("Thông tin", info, parent=self.root)
+        """Displays localized application information."""
+        info = self._t('about_body', app_name=APP_NAME, version=APP_VERSION)
+        messagebox.showinfo(self._t('about_title'), info, parent=self.root)
 
     def _open_settings_window(self):
         """Opens the modal Settings window."""
@@ -596,7 +858,11 @@ class ModemResetApp:
              # Show error message only once per invalid directory detection
              if not hasattr(self, "_log_dir_error_shown") or not self._log_dir_error_shown:
                  if self.root and self.root.winfo_exists(): # Check if parent window exists
-                    messagebox.showerror("Lỗi Xuất Log", f"Thư mục lưu log tự động '{self.log_directory or ''}' không hợp lệ hoặc không thể truy cập.\nVui lòng kiểm tra lại trong Cài đặt Log.", parent=self.root)
+                    messagebox.showerror(
+                        self._t('export_error_title'),
+                        self._t('invalid_export_directory', directory=self.log_directory or ''),
+                        parent=self.root,
+                    )
                  self._log_dir_error_shown = True # Flag to prevent repeated popups
              logging.error(f"Auto log export failed: Directory '{self.log_directory or ''}' is invalid or inaccessible.")
              self.log_interval = 0 # Temporarily disable auto-export until settings are fixed
@@ -637,7 +903,7 @@ class ModemResetApp:
         try:
             with open(full_path, 'w', encoding='utf-8') as f:
                 # Write header
-                f.write("Thời gian\tIP\tTrạng thái\n")
+                f.write(f"{self._t('time')}\t{self._t('ip')}\t{self._t('status')}\n")
                 f.write("="*60 + "\n") # Separator line
                 # Write data
                 f.write("\n".join(log_data))
@@ -647,16 +913,27 @@ class ModemResetApp:
             if self.tree and self.tree.winfo_exists():
                 try:
                     self.tree.delete(*log_items) # Delete exported items
+                    for item in log_items:
+                        self.tree_statuses.pop(item, None)
+                        self.tree_ips.pop(item, None)
                 except tk.TclError:
                     logging.warning("Could not clear Treeview after auto-export (TclError).")
         except (IOError, OSError) as e:
             logging.error(f"Auto log export failed: Error writing file '{full_path}': {e}")
             if self.root and self.root.winfo_exists():
-                messagebox.showerror("Lỗi Xuất Log", f"Không thể ghi file log:\n{full_path}\n\nLỗi: {e}", parent=self.root)
+                messagebox.showerror(
+                    self._t('export_error_title'),
+                    self._t('write_log_error', path=full_path, error=e),
+                    parent=self.root,
+                )
         except Exception as e: # Catch any other unexpected error during file write/clear
             logging.exception("Unexpected error during auto log export file operation:")
             if self.root and self.root.winfo_exists():
-                messagebox.showerror("Lỗi Xuất Log", f"Lỗi không xác định khi xuất log:\n{e}", parent=self.root)
+                messagebox.showerror(
+                    self._t('export_error_title'),
+                    self._t('unknown_export_error', error=e),
+                    parent=self.root,
+                )
         finally:
             # --- Reschedule for the next interval ---
             # Check conditions again in case they changed during export (e.g., user changed settings)
@@ -808,7 +1085,9 @@ class ModemResetApp:
              if self.ip_label and self.ip_label.winfo_exists():
                  with self.lock: # Read shared variable safely
                      ip_to_display = self.public_ip
-                 self.ip_label.config(text=f"IP Public: {ip_to_display}")
+                 self.ip_label.config(
+                     text=self._t('public_ip', value=self._status_text(ip_to_display))
+                 )
         except tk.TclError:
             pass # Widget might have been destroyed between check and config
 
@@ -861,28 +1140,33 @@ class ModemResetApp:
         else:
             return  # No log if status undetermined
 
-        # Check for duplicate or related log at the same timestamp
+        display_ip = self._status_text(log_ip)
+        display_status = self._status_text(log_status)
+
+        # Check for duplicate or related log at the same timestamp.
         children = self.tree.get_children('')
         duplicate_found = False
+        final_statuses = [STATUS_NORMAL, STATUS_LOGIN_FAILED, STATUS_REBOOT_CMD_ERROR, STATUS_RESET_END_UNKNOWN]
         for item in children:
             values = self.tree.item(item, 'values')
+            previous_status = self.tree_statuses.get(item)
             if len(values) == 3 and values[0] == now:
-                # Skip if same status already exists
-                if values[2] == log_status:
+                if previous_status == log_status:
                     duplicate_found = True
                     break
-                # If new status is a final/summary status, remove previous log at this timestamp
-                if log_status in [STATUS_NORMAL, STATUS_LOGIN_FAILED, STATUS_REBOOT_CMD_ERROR, STATUS_RESET_END_UNKNOWN]:
+                if any(log_status == status or log_status.startswith(status.partition('{}')[0]) for status in final_statuses):
                     self.tree.delete(item)
+                    self.tree_statuses.pop(item, None)
+                    self.tree_ips.pop(item, None)
                     break
-                # If previous is a final status and new is intermediate, skip adding
-                if values[2] in [STATUS_NORMAL, STATUS_LOGIN_FAILED, STATUS_REBOOT_CMD_ERROR, STATUS_RESET_END_UNKNOWN]:
+                if previous_status and any(previous_status == status or previous_status.startswith(status.partition('{}')[0]) for status in final_statuses):
                     duplicate_found = True
                     break
-                # Otherwise, allow both (for logical sequence)
-        # Insert new log if not duplicate
+
         if not duplicate_found:
-            self.tree.insert('', 0, values=(now, log_ip, log_status))
+            item = self.tree.insert('', 0, values=(now, display_ip, display_status))
+            self.tree_statuses[item] = log_status
+            self.tree_ips[item] = log_ip
 
     def _log_update_loop(self):
         """Periodically schedules the GUI log update."""
@@ -941,7 +1225,11 @@ class ModemResetApp:
         if not password:
             # Show error only for manual attempts
             if not is_auto and self.root and self.root.winfo_exists():
-                messagebox.showerror("Thiếu Mật khẩu", "Vui lòng nhập mật khẩu modem.", parent=self.root)
+                messagebox.showerror(
+                    self._t('missing_password_title'),
+                    self._t('missing_password'),
+                    parent=self.root,
+                )
             else:
                 logging.warning("Reset skipped: Modem password not provided.")
             return
@@ -952,7 +1240,11 @@ class ModemResetApp:
             logging.warning(f"{action_type} reset request ignored: Another reset is already in progress.")
             # Show message only for manual attempts
             if not is_auto and self.root and self.root.winfo_exists():
-                messagebox.showinfo("Đang thực hiện", "Modem đang trong quá trình reset.\nVui lòng đợi.", parent=self.root)
+                messagebox.showinfo(
+                    self._t('reset_in_progress_title'),
+                    self._t('reset_in_progress'),
+                    parent=self.root,
+                )
             return
 
         # --- Start Reset Process ---
@@ -1240,6 +1532,19 @@ if __name__ == '__main__':
                    parent = root
               else: # If root wasn't even created, can't show messagebox relative to it
                    parent = None
-              messagebox.showerror("Lỗi Nghiêm Trọng", f"Ứng dụng gặp lỗi nghiêm trọng và phải đóng:\n\n{type(e).__name__}: {e}\n\nVui lòng kiểm tra file log '{log_filename}' để biết chi tiết.", parent=parent)
+              if 'app' in locals() and isinstance(app, ModemResetApp):
+                   title = app._t('fatal_error_title')
+                   body = app._t(
+                       'fatal_error',
+                       error_type=type(e).__name__,
+                       error=e,
+                       log_filename=log_filename,
+                   )
+              else:
+                   title = TRANSLATIONS[DEFAULT_LANGUAGE]['fatal_error_title']
+                   body = TRANSLATIONS[DEFAULT_LANGUAGE]['fatal_error'].format(
+                       error_type=type(e).__name__, error=e, log_filename=log_filename
+                   )
+              messagebox.showerror(title, body, parent=parent)
          except Exception as final_e:
               logging.error(f"Could not display final error messagebox: {final_e}")
