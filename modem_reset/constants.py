@@ -6,7 +6,6 @@ APP_USER_MODEL_ID = "ResetModem.ModemResetTool"
 CONFIG_PATH = Path("config.ini")
 LOG_PATH = Path("modem_reset_tool.log")
 ICON_PATH = Path(__file__).resolve().parent.parent / "icons" / "app_icon.ico"
-ICON_PNG_PATH = Path(__file__).resolve().parent.parent / "icons" / "app_icon.png"
 
 MODEM_IP = "http://192.168.0.1"
 MODEM_API_URL = f"{MODEM_IP}/reqproc/proc_post"

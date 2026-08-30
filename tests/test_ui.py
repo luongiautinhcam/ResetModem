@@ -34,8 +34,6 @@ class MainWindowTests(unittest.TestCase):
                 self.assertEqual("Reset Modem", app.restart_button.cget("text"))
                 self.assertGreaterEqual(root.winfo_width(), 400)
                 self.assertGreaterEqual(root.winfo_height(), 300)
-                self.assertIsNotNone(app._window_icon)
-                self.assertIn(str(app._window_icon), root.tk.call("image", "names"))
 
                 app.language_var.set("en")
                 app._change_language()
